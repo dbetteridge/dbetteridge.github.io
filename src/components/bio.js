@@ -57,8 +57,10 @@ const Bio = () => {
         Written by <strong>{author}</strong> who lives and works in Perth, WA
         building useful things.
         <br/>
-        You could follow him on {' '}
+        You could follow him on
+        
         <a href={`https://twitter.com/${social.twitter}`}>Twitter</a>
+        
         But really, why would you.
       </p>
     </div>
