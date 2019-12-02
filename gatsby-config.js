@@ -5,7 +5,7 @@ module.exports = {
     description: `A place for rants.`,
     siteUrl: `https://danielbetteridge.com/`,
     social: {
-      twitter: `drbetteridge`,
+      twitter: `danrbetteridge`,
     },
   },
   plugins: [

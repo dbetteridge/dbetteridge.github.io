@@ -8,6 +8,11 @@ description: When you need to find out info about your users and groups, using t
 tags:
   - node
   - active directory
+  - graph
+  - access token
+  - groups
+  - users
+  - pagination
 ---
 
 ![Explaining AD](./explain.jpg)
