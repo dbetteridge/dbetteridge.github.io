@@ -8,6 +8,7 @@ module.exports = {
       twitter: `danrbetteridge`,
     },
   },
+  pathPrefix: `/build`,
   plugins: [
     {
       resolve: `gatsby-source-filesystem`,
@@ -50,7 +51,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
-        //trackingId: `ADD YOUR TRACKING ID HERE`,
+        trackingId: `UA-141206687-2`,
       },
     },
     `gatsby-plugin-feed`,
@@ -63,7 +64,7 @@ module.exports = {
         background_color: `#ffffff`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `content/assets/gatsby-icon.png`,
+        icon: `content/assets/favicon.ico`,
       },
     },
     `gatsby-plugin-offline`,
