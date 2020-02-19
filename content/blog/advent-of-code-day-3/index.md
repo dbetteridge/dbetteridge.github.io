@@ -78,7 +78,6 @@ func main() {
 		x, y, totalSteps := 0, 0, 0
 		for _, movement := range wireMovements {
 			direction, spaces := spacesDirection(movement)
-
 			for s := 1; s <= spaces; s++ {
 				totalSteps++
 				if direction == "R" {
