@@ -10,6 +10,10 @@ tags:
   - graphql
   - files
   - uploads
+  - upload
+  - aws
+  - lambda
+  - apollo
 ---
 
 ## Uploading files to graphql on lambda
@@ -88,3 +92,7 @@ module.exports = function isObject(val) {
 
 Uploading to the graphql endpoint now works perfectly, no changes to the lambda config itself were required.
 content_handling is setup as "CONVERT_TO_TEXT"
+
+[ProcessRequest - Apollo source](https://github.com/jaydenseric/graphql-upload/blob/master/lib/processRequest.js)
+[Streams - Read, Write, Transform](https://www.sandersdenardi.com/readable-writable-transform-streams-node/)
+[Multipart Graphql request](https://github.com/jaydenseric/graphql-multipart-request-spec)
