@@ -54,11 +54,16 @@ const Bio = () => {
         }}
       />
       <p>
-        Written by <strong>{author}</strong> who lives and works in Perth, WA
-        building useful things.
+        Written by <strong>{author}</strong> who lives and works in London
+        building Javascript Rube-Goldberg machines for fun and profit.
         <br />
         You could follow him on{" "}
-        <a href={`https://twitter.com/${social.twitter}`} title="But really, theres nothing here">Twitter</a>
+        <a
+          href={`https://twitter.com/${social.twitter}`}
+          title="But really, theres nothing here"
+        >
+          Twitter
+        </a>
         <br />
         But really, why would you.
       </p>
