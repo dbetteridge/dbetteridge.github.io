@@ -25,6 +25,8 @@ jobs:
       - name: move into gatsby dir
         run: cd $GITHUB_WORKSPACE
 
+      - name: list content
+        run: ls
       # Rluns gatsby publish
       - name: Gatsby Publish
         uses: enriikke/gatsby-gh-pages-action@v2.1.1
