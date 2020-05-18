@@ -13,6 +13,10 @@ const Body = styled("div")`
       font-size: 0.5rem;
     }
   }
+
+  ul {
+    margin-left: 20px;
+  }
 `
 
 class BlogPostTemplate extends React.Component {
