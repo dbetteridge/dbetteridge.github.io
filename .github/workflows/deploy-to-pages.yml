@@ -26,10 +26,11 @@ jobs:
         run: cd $GITHUB_WORKSPACE
 
       - name: list content
-        run: ls
+        run: ls ./CNAME
       # Rluns gatsby publish
       - name: Gatsby Publish
         uses: enriikke/gatsby-gh-pages-action@v2.1.1
         with:
           # A personal access token needed to push your site after it has been built.
           access-token: ${{ secrets.ACCESS_TOKEN }}
+          gatsby-args: --prefix-paths
