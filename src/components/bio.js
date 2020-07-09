@@ -58,14 +58,9 @@ const Bio = () => {
         building Javascript Rube-Goldberg machines for fun and profit.
         <br />
         You could follow him on{" "}
-        <a
-          href={`https://twitter.com/${social.twitter}`}
-          title="But really, theres nothing here"
-        >
+        <a href={`https://twitter.com/${social.twitter}`} title="Twitter">
           Twitter
         </a>
-        <br />
-        But really, why would you.
       </p>
     </div>
   )
