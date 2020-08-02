@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: `My thoroughly useless Blog`,
+    title: `Occasional Blog`,
     author: `Daniel Betteridge`,
     description: `A place for rants.`,
     siteUrl: `https://danielbetteridge.com/`,
