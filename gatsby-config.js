@@ -79,12 +79,13 @@ module.exports = {
     {
       resolve: "gatsby-plugin-social-cards",
       options: {
+        authorImage: "./static/images/Profile.jpeg",
         // image to use when no cover in frontmatter
-        backgroundImage: "/images/seo.jpg",
+        backgroundImage: "./static/images/seo.jpg",
         // author to use when no auth in frontmatter
         defaultAuthor: "Daniel Betteridge",
         // card design
-        design: "default", // 'default' or 'card'
+        design: "card", // 'default' or 'card'
       },
     },
   ],
