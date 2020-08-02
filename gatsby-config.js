@@ -4,8 +4,9 @@ module.exports = {
     author: `Daniel Betteridge`,
     description: `A place for rants.`,
     siteUrl: `https://danielbetteridge.com/`,
+    image: "/images/seo.jpg",
     social: {
-      twitter: `danrbetteridge`,
+      twitter: `@danrbetteridge`,
     },
   },
   pathPrefix: `/`,

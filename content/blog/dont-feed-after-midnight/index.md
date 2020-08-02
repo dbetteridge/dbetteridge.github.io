@@ -12,7 +12,7 @@ tags:
   - gremlin-javascript
 ---
 
-Below I describe some techniques I have found for querying deeply nested data that does not fit well in a traditional relational database.
+Below I describe some techniques I have found for querying nested data that does not fit well in a traditional relational database.
 These are specific to the Gremlin query language and compatible databases.
 
 ### Setup for connecting to Neptune (VPC restriction but no IAM)
