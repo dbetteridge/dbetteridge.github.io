@@ -76,5 +76,16 @@ module.exports = {
         pathToConfigModule: `src/utils/typography`,
       },
     },
+    {
+      resolve: "gatsby-plugin-social-cards",
+      options: {
+        // image to use when no cover in frontmatter
+        backgroundImage: "/images/seo.jpg",
+        // author to use when no auth in frontmatter
+        defaultAuthor: "Daniel Betteridge",
+        // card design
+        design: "default", // 'default' or 'card'
+      },
+    },
   ],
 }
