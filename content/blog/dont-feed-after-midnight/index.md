@@ -6,15 +6,16 @@ featuredpost: false
 description: Gremlin setup and structure
 tags:
   - node
-  - neptune
+  - Neptune
   - graph
   - gremlin
   - gremlin-javascript
 ---
 
-I have recently been working with the gremlin query language and the neptune and tinkergraph databases to handle querying some deeply nested data that does not fit well with a traditional relational database, in the process i've found some useful setup and structure to make things a bit cleaner.
+Below I describe some techniques I have found for querying deeply nested data that does not fit well in a traditional relational database.
+These are specific to the Gremlin query language and compatible databases.
 
-### Setup for connecting to neptune (VPC restriction but no IAM)
+### Setup for connecting to Neptune (VPC restriction but no IAM)
 
 ```javascript
 const gremlin = require("gremlin")
@@ -108,4 +109,4 @@ Subset of this below
 
 ### End
 
-Hopefully this will help someone else working with gremlin and AWS neptune
+Hopefully this will help someone else working with gremlin and AWS Neptune
