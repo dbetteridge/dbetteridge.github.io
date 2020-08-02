@@ -50,6 +50,14 @@ const { within } = gremlin.process.P
 
 ```javascript
 const countChildren = baseQuery => {
+  /**
+   *  [titan | Kronos] -> child -> [god | Zeus]
+   *  [titan | Hyperion] -> child -> [titan | Helios]
+   *  [titan | Crius]
+   * BECOMES
+   *  [titan | Kronos] -> child -> [god | Zeus]
+   *  [titan | Hyperion] -> child -> [titan | Helios]
+   */
   return baseQuery.where(
     outE("child")
       .count()
