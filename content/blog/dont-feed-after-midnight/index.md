@@ -44,19 +44,11 @@ const { within } = gremlin.process.P
 
 - process.t provides native attributes like id and label
 - process.statics provides querying functions such as in and out for following edges or retrieving properties
-- process.P provides comparators lik between, eq, within or gt
+- process.P provides comparators like between, eq, within or gt
 
 ### Conditional Function composition
 
-Use javascript to determine what to compose
-
 ```javascript
-const { id } = gremlin.process.t
-const { outE, gt } = gremlin.process.statics
-
-const has_children = true
-const get_children = true
-
 const countChildren = baseQuery => {
   return baseQuery.where(
     outE("child")
@@ -64,7 +56,9 @@ const countChildren = baseQuery => {
       .is(gt(0))
   )
 }
+```
 
+```javascript
 const fetchChildren = baseQuery => {
   return baseQuery
     .project("name", "children")
@@ -76,7 +70,9 @@ const fetchChildren = baseQuery => {
         .fold()
     )
 }
+```
 
+```javascript
 let baseQuery = connection.V().hasLabel("titan")
 
 if (has_children) {
