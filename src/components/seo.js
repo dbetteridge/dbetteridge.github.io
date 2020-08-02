@@ -9,10 +9,9 @@ import React from "react"
 import PropTypes from "prop-types"
 import Helmet from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
+import defaultMetaImage from "../../static/images/seo.jpg"
 
-const image = node.frontmatter.socialcard
-
-function SEO({ description, lang, meta, title }) {
+function SEO({ postData, description, lang, meta, title }) {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -22,6 +21,7 @@ function SEO({ description, lang, meta, title }) {
             description
             author
             image
+            siteUrl
           }
         }
       }
@@ -29,6 +29,10 @@ function SEO({ description, lang, meta, title }) {
   )
 
   const metaDescription = description || site.siteMetadata.description
+
+  const image = `${site.siteMetadata.siteUrl}/${(postData &&
+    postData.fields.socialcard) ||
+    defaultMetaImage}`
 
   return (
     <Helmet

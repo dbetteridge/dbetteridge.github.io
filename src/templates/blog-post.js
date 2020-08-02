@@ -30,6 +30,7 @@ class BlogPostTemplate extends React.Component {
         <SEO
           title={post.frontmatter.title}
           description={post.frontmatter.description || post.excerpt}
+          postData={post}
         />
         <h1
           style={{
@@ -99,6 +100,10 @@ export const pageQuery = graphql`
       id
       excerpt(pruneLength: 160)
       html
+      fields {
+        slug
+        socialcard
+      }
       frontmatter {
         title
         date(formatString: "MMMM DD, YYYY")
