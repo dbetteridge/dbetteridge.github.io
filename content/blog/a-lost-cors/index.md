@@ -50,6 +50,11 @@ but the initial piece of work I wanted to do to learn about browser API's is unf
 
 I'm told the best way to find out the answer to a question is post the wrong one online, So I hope that if there is a way around these issues someone reads this and can tell me.
 
+## Solutions
+
+Could we have some kind of CORS bypass that is only accessible to installed PWA's ?
+I'll leave it up to someone with more experience in the browser security model to tell me why that won't work the way I think.
+
 ## Further Reading
 
 [Paul's great prior article - 2015](https://aerotwist.com/blog/cors-for-concern/)
