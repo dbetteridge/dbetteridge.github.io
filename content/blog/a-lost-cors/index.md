@@ -44,9 +44,13 @@ headers in your response, the values of these vary by your setup but these are f
 
 Unfortunately you cannot force 3rd party server owners to enable these, so you need either setup a proxy (Can get expensive) or only support content that does return those headers (Very limited range!)
 
+## Options
+
 If you have a link to the audio file, you can just put this straight into an `<audio>` element and it will be playable.
 
-<b>But</b> you cannot access that data from javascript, so no pre-loading, no caching it into IndexedDB or doing any sort of browser side audio improvements.
+<b>But</b> you cannot access that data from javascript, so no caching it into IndexedDB or doing any sort of browser side audio improvements.
+
+You can request the resource with `mode: 'no-cors'` which a Service-Worker is still able to cache the resulting data, but you cannot access this data outside of just serving it up to the `<audio>` element as discussed above, this allows offline to work and is an improvement but still not at the level of a 'Native' application.
 
 ## Whats next?
 
