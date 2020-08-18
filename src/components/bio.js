@@ -54,10 +54,12 @@ const Bio = () => {
         }}
       />
       <p>
-        Written by <strong>{author}</strong> who lives and works in London
-        building Javascript Rube-Goldberg machines for fun and profit.
+        <strong>{author}</strong> lives and works in London
         <br />
-        You could follow him on{" "}
+        I work to solve business problems, usually with as little code as
+        possible
+        <br />
+        Follow me on{" "}
         <a href={`https://twitter.com/${social.twitter}`} title="Twitter">
           Twitter
         </a>
