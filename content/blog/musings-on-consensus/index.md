@@ -3,6 +3,7 @@ templateKey: blog-post
 title: Musings on a consensus system for the web
 date: 2020-05-3T11:44:10.000Z
 featuredpost: true
+cover: pepperidge.jpg
 description: How do we establish trust in the web we use?
 tags:
   - graph

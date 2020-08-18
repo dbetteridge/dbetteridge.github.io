@@ -85,7 +85,7 @@ module.exports = {
         // author to use when no auth in frontmatter
         defaultAuthor: "Daniel Betteridge",
         // card design
-        design: "card", // 'default' or 'card'
+        design: "default", // 'default' or 'card'
       },
     },
   ],

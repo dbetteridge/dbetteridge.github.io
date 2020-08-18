@@ -3,7 +3,8 @@ templateKey: blog-post
 title: A Lost CORS?
 date: 2020-08-18T15:04:10.000Z
 featuredpost: false
-featuredimage: stop-lizard.jpg
+featuredImage: ./stop-lizard.jpg
+cover: ./stop-lizard.jpg
 description: CORS, PWA's and frustration
 tags:
   - javascript

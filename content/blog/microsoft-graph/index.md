@@ -3,7 +3,7 @@ templateKey: blog-post
 title: Let's talk to Active Directory
 date: 2019-07-21T15:04:10.000Z
 featuredpost: false
-featuredimage: ./explain.jpg
+cover: ./explain.jpg
 description: When you need to find out info about your users and groups, using the approved tools of your benign IT overlords
 tags:
   - node
