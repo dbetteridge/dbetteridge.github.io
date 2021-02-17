@@ -22,7 +22,6 @@ I am learning Rust and do not pretend that this is the best solution or even par
 
 ![Basic folder setup](FolderStructure.PNG)
 
-
 ## Database schema
 
 Schema to handle users, sessions, cards and trades.
@@ -32,6 +31,7 @@ Schema to handle users, sessions, cards and trades.
 ## Registering a new user
 
 First we define a user model and map it to our users table.
+
 ```rust
   #[derive(Deserialize, PostgresMapper, Serialize, Debug)]
   #[pg_mapper(table = "users")] // singular 'user' is a keyword..
@@ -63,7 +63,7 @@ This user is stored into the database and the result returned as JSON to the API
 ```
 
 The actual code run in `db::add_user` is shown below.  
-the `iter().map().collect().pop()` step is necessary to convert the returned rows from a postgres datastructure to a valid User model 
+the `iter().map().collect().pop()` step is necessary to convert the returned rows from a postgres datastructure to a valid User model
 then collect them up into a Rust Vector and return the top result.  
 We could alternatively use `.query_one` and convert that directly.
 
@@ -99,13 +99,15 @@ The core of the session handling can be found in main.rs and handlers.rs login f
 ```rust
   .wrap(CookieSession::signed(&[0; 32]).secure(false))
 ```
-Uses actix-session to create a cookie, This cookie also allows us to set values much like using localStorage in the browser. 
+
+Uses actix-session to create a cookie, This cookie also allows us to set values much like using localStorage in the browser.
 [Full function](https://github.com/dbetteridge/actix-session-example/blob/master/src/main.rs#L24)
 
 ```rust
   let db_session = db::login(&client, user_info).await?;
   session.set("session", db_session.token)?;
 ```
+
 Here we are taking the session token returned from the database login call and setting it in our session cookie for later use.
 [Full function](https://github.com/dbetteridge/actix-session-example/blob/master/src/handlers.rs#L30)
 
@@ -113,9 +115,42 @@ Here we are taking the session token returned from the database login call and s
   let session_token = session.get("session").unwrap().unwrap_or_default();
   db::auth(&client, session_token).await
 ```
-We extract the session token from the session cookie and check it against the database to see if it exists and hasn't expired.
-If it is valid we return the User associated with that token.
+
+We extract the session token from the session cookie and pass it to our database auth function
 [Full function](https://github.com/dbetteridge/actix-session-example/blob/master/src/handlers.rs#L116)
+
+```rust
+  match client
+      .query(&stmt, &[&session_token])
+      .await?
+      .first()
+      .map(|row| {
+          (
+              User::from_row_ref(row).unwrap(),
+              Session::from_row_ref(row).unwrap(),
+          )
+      })
+      .ok_or(MyError::AuthError(String::from("No valid session")))
+  {
+      Ok(r) => {
+          let created: DateTime<Utc> = r.1.created;
+          let now = Utc::now();
+          let hour = chrono::Duration::milliseconds(60 * 60 * 1000);
+          let has_not_expired = now.le(&created.add(hour));
+          if has_not_expired {
+              Ok(r.0)
+          } else {
+              Err(MyError::AuthError(String::from("No valid session")))
+          }
+      }
+      Err(err) => Err(err),
+  }
+```
+
+The database call to perform auth essentially checks that the given token exists in the database,
+if it does then it checks that less then an hour has passed since it was created.  
+If more then an hour has passed or if the session token isn't in the database we return an AuthError.  
+[The rest](https://github.com/dbetteridge/actix-session-example/blob/master/src/db.rs#L159)
 
 ```rust
   match auth(session, db_pool.clone()).await {
@@ -127,6 +162,7 @@ If it is valid we return the User associated with that token.
           Err(err) => Err(err),
   }
 ```
+
 We run the above auth check and use the returned user object when auth is successful or throw an error if it fails.
 [Full function](https://github.com/dbetteridge/actix-session-example/blob/master/src/handlers.rs#L63)
 
@@ -134,7 +170,6 @@ We run the above auth check and use the returned user object when auth is succes
 
 And thats it, a simple user registration and session auth using actix.  
 My next goal is re-write this using the actix actor model, so if that interests you keep an eye out for part 2.
-
 
 ## Codebase
 
