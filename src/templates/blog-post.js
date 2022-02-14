@@ -6,8 +6,9 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { rhythm, scale } from "../utils/typography"
 import styled from "styled-components"
+import { MDXRenderer } from "gatsby-plugin-mdx"
 
-const Body = styled("div")`
+const Body = styled(MDXRenderer)`
   @media screen and (max-width: 600px) {
     &&& code {
       font-size: 0.5rem;
@@ -21,7 +22,7 @@ const Body = styled("div")`
 
 class BlogPostTemplate extends React.Component {
   render() {
-    const post = this.props.data.markdownRemark
+    const post = this.props.data.mdx
     const siteTitle = this.props.data.site.siteMetadata.title
     const { previous, next } = this.props.pageContext
 
@@ -49,7 +50,7 @@ class BlogPostTemplate extends React.Component {
         >
           {post.frontmatter.date}
         </p>
-        <Body dangerouslySetInnerHTML={{ __html: post.html }} />
+        <Body>{post.body}</Body>
         <hr
           style={{
             marginBottom: rhythm(1),
@@ -96,10 +97,10 @@ export const pageQuery = graphql`
         author
       }
     }
-    markdownRemark(fields: { slug: { eq: $slug } }) {
+    mdx(fields: { slug: { eq: $slug } }) {
       id
       excerpt(pruneLength: 160)
-      html
+      body
       fields {
         slug
         socialcard
