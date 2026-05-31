@@ -111,10 +111,16 @@
 
       <section id="contact" class="contact" aria-labelledby="contact-heading">
         <h2 id="contact-heading">Contact</h2>
-        <p class="section-intro">Get in touch by email or LinkedIn.</p>
+        <p class="section-intro">Get in touch by email, phone, or LinkedIn.</p>
         <ul class="contact-list">
           <li>
             <a href="mailto:mail@danb.id.au">mail@danb.id.au</a>
+          </li>
+          <li class="contact-phone">
+            <button type="button" class="phone-reveal" id="phone-reveal" aria-controls="phone-number" aria-expanded="false">
+              Show phone number
+            </button>
+            <span id="phone-number" class="phone-number" hidden></span>
           </li>
           <li>
             <a href="https://www.linkedin.com/in/danielbetteridge/" rel="noopener noreferrer" target="_blank">
@@ -129,13 +135,31 @@
 
   <footer class="site-footer">
     <div class="page-width footer-inner">
-      <p>&copy; <span id="year"></span> Daniel Betteridge</p>
+      <p>&copy; <span id="year"></span> Daniel Betteridge · ABN 73 530 046 581</p>
       <p>danb.id.au</p>
     </div>
   </footer>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    (function () {
+      var btn = document.getElementById('phone-reveal');
+      var target = document.getElementById('phone-number');
+      if (!btn || !target) return;
+
+      btn.addEventListener('click', function () {
+        var digits = [48, 52, 51, 49, 48, 48, 51, 49, 56, 56]
+          .map(function (code) { return String.fromCharCode(code); })
+          .join('');
+        var link = document.createElement('a');
+        link.href = 'tel:+61' + digits.slice(1);
+        link.textContent = digits.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+        target.appendChild(link);
+        target.hidden = false;
+        btn.remove();
+      });
+    }());
   </script>
 </body>
 </html>
