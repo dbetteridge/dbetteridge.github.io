@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Use local, non-LLM models to find personal data, swap in stable identifiers, then send scrubbed text to cloud LLM providers.">
+  <meta name="author" content="Daniel Betteridge">
+  <meta name="theme-color" content="#f8fafc">
+  <title>Redact PII locally before calling external LLMs — Daniel Betteridge</title>
+  <link rel="canonical" href="https://danb.id.au/blog/pii-redaction-before-llm.html">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="page-width header-inner">
+      <a class="logo" href="/">Daniel Betteridge</a>
+      <nav class="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="/#services">Services</a></li>
+          <li><a href="/#blog">Blog</a></li>
+          <li><a href="/#about">About</a></li>
+          <li><a href="/#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="blog-post">
+    <article class="page-width blog-article">
+      <p class="blog-back"><a href="/#blog">← Blog</a></p>
+      <p id="post-meta" class="blog-meta" hidden></p>
+      <div id="post-content" class="blog-content" aria-live="polite">
+        <p class="blog-loading">Loading post…</p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="page-width footer-inner">
+      <p>&copy; <span id="year"></span> Daniel Betteridge · ABN 73 530 046 581</p>
+      <p>danb.id.au</p>
+    </div>
+  </footer>
+
+  <script src="marked.min.js"></script>
+  <script type="module">
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const MARKDOWN_URL = 'pii-redaction-before-llm.md';
+    const contentEl = document.getElementById('post-content');
+    const metaEl = document.getElementById('post-meta');
+
+    function parseFrontMatter(raw) {
+      if (!raw.startsWith('---\n') && !raw.startsWith('---\r\n')) {
+        return { meta: {}, body: raw };
+      }
+      const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+      if (!match) {
+        return { meta: {}, body: raw };
+      }
+      const meta = {};
+      match[1].split(/\r?\n/).forEach((line) => {
+        const idx = line.indexOf(':');
+        if (idx === -1) return;
+        meta[line.slice(0, idx).trim()] = line.slice(idx + 1).trim();
+      });
+      return { meta, body: match[2] };
+    }
+
+    function formatDate(iso) {
+      const d = new Date(iso + 'T00:00:00');
+      if (Number.isNaN(d.getTime())) return iso;
+      return d.toLocaleDateString('en-AU', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+
+    function showError(message) {
+      contentEl.innerHTML = '<p class="blog-error">' + message + '</p>';
+    }
+
+    function promoteMermaidBlocks(root) {
+      root.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const diagram = document.createElement('div');
+        diagram.className = 'mermaid blog-diagram';
+        diagram.textContent = code.textContent;
+        pre.replaceWith(diagram);
+      });
+    }
+
+    if (typeof marked === 'undefined') {
+      showError('Could not load the markdown renderer. Refresh and try again.');
+    } else {
+      marked.setOptions({ gfm: true, breaks: false });
+
+      fetch(MARKDOWN_URL)
+        .then((res) => {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.text();
+        })
+        .then(async (raw) => {
+          const parsed = parseFrontMatter(raw);
+          if (parsed.meta.date) {
+            metaEl.textContent = formatDate(parsed.meta.date);
+            metaEl.hidden = false;
+          }
+          if (parsed.meta.title) {
+            document.title = parsed.meta.title + ' — Daniel Betteridge';
+          }
+          contentEl.innerHTML = marked.parse(parsed.body);
+          promoteMermaidBlocks(contentEl);
+
+          if (contentEl.querySelector('.mermaid')) {
+            const mermaid = (await import('https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.esm.min.mjs')).default;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'base',
+              securityLevel: 'strict',
+              flowchart: { curve: 'basis', htmlLabels: true },
+              themeVariables: {
+                primaryColor: '#f0fdfa',
+                primaryTextColor: '#0f172a',
+                primaryBorderColor: '#0d9488',
+                lineColor: '#64748b',
+                secondaryColor: '#f1f5f9',
+                tertiaryColor: '#fff7ed',
+                fontFamily: 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif'
+              }
+            });
+            await mermaid.run({ nodes: contentEl.querySelectorAll('.mermaid') });
+          }
+        })
+        .catch(() => {
+          showError(
+            'Could not load the post. Serve the site over HTTP ' +
+            '(for example: <code>python -m http.server 8080</code>) rather than opening the HTML file directly.'
+          );
+        });
+    }
+  </script>
+</body>
+</html>

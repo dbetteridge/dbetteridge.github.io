@@ -128,9 +128,25 @@ Or use online tools like [dnschecker.org](https://dnschecker.org/).
 .
 ├── index.html      # Main page
 ├── styles.css      # Styles
+├── blog/
+│   ├── pii-redaction-before-llm.md    # Blog post source (edit this)
+│   ├── pii-redaction-before-llm.html  # Renders the markdown in the browser
+│   └── marked.min.js                  # Markdown renderer
 ├── CNAME           # Custom domain for GitHub Pages
 ├── .nojekyll       # Skip Jekyll processing
 └── README.md       # This file
+```
+
+## Writing a blog post
+
+1. Edit or add a `.md` file under `blog/` (YAML front matter `title`, `date`, and `summary` are optional).
+2. Copy `blog/pii-redaction-before-llm.html` for a new post and point `MARKDOWN_URL` at your new `.md` file.
+3. Add a link in the Blog section of `index.html`.
+
+Preview with a local HTTP server (required so the page can fetch the markdown):
+
+```bash
+python -m http.server 8080
 ```
 
 ## Accessibility
