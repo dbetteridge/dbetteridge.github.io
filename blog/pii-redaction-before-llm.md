@@ -14,6 +14,8 @@ Cloud LLM APIs are useful, but the prompt is still data leaving your network. Cu
 
 This allows us to **detect and replace PII on your side with local, non-generative models**, send only tokenised text to the external model, then **restore real values in the response** if the user needs them.
 
+The goal of this is protecting sensitive data from external providers along with accidental leaks through logging and prompts, We are not trying to protect against wider application compromise or malicious users with this approach.
+
 ## How do we identify the risky data?
 
 I'd avoid using an LLM to find the PII in the first place. Regex and local NER are usually enough for the first pass. Replace the values with stable tokens, send that to the model, and restore them afterwards if the response actually needs them.
@@ -180,6 +182,14 @@ Presidio works on spans inside a string. Large payloads should be split **before
 | Remap | Same Lambda invoke, before the response leaves |
 
 Cold start cost is mostly loading the NLP model — package a slim spaCy pipeline, reuse the global `AnalyzerEngine` across warm invokes, and keep chunk size predictable so timeouts stay boring.
+
+## What this doesn't cover
+
+Redacting PII doesn't protect against prompt injection, and it doesn't guarantee that sensitive information can't be inferred from context. Treat documents and retrieved content as untrusted input, and enforce tool permissions independently of the model.
+
+A full firewall should also cover more than prompts: embeddings, file uploads, tool arguments, and telemetry can all leak sensitive data. If detection fails, don't silently fall back to sending the original content. For sensitive workloads, fail closed.
+
+Finally, validate the model's response before rehydrating tokens. The model can invent or misuse placeholders, and rehydration can reintroduce the data you're trying to protect.
 
 ## Concerns or considerations
 
