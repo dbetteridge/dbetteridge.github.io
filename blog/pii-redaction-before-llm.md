@@ -8,22 +8,20 @@ summary: Use local, non-LLM models to find personal data, swap in stable identif
 
 *The LLM data firewall pattern*
 
-## Why this matters
+## Whats the benefit?
 
 Cloud LLM APIs are useful, but the prompt is still data leaving your network. Customer records, tickets, medical notes, HR files, and support logs often contain names, emails, phone numbers, addresses, and IDs. Once that text hits a third-party API, you are relying on the provider’s retention, training, and subprocessors — not on controls you own.
 
-A practical pattern: **detect and replace PII on your side with local, non-generative models**, send only tokenised text to the external model, then **restore real values in the response** if the user needs them.
+This allows us to **detect and replace PII on your side with local, non-generative models**, send only tokenised text to the external model, then **restore real values in the response** if the user needs them.
 
-## What we do locally
+## How do we identify the risky data?
 
-You do not need another generative model on-prem for the scrubbing step. Classical and small discriminative approaches work well for PII:
+I'd avoid using an LLM to find the PII in the first place. Regex and local NER are usually enough for the first pass. Replace the values with stable tokens, send that to the model, and restore them afterwards if the response actually needs them.
 
 - **Rules / regex** for high-precision formats (emails, phone numbers, credit cards, Australian TFNs/ABNs with care, Medicare-style patterns where appropriate)
 - **Named-entity recognition (NER)** with libraries such as spaCy (or similar) for people, organisations, and locations
 - **Frameworks that combine both**, e.g. Microsoft Presidio (analyser + anonymiser) with a local NLP backend
 - Optional **custom recognisers** for your domain (member numbers, booking refs, internal usernames)
-
-These run offline or in your VPC, do not “chat,” and are easier to reason about for compliance than sending raw text to a frontier model “to find the PII.”
 
 ## The pipeline
 
@@ -86,29 +84,28 @@ from dataclasses import dataclass, field
 from typing import Callable
 
 from presidio_analyzer import AnalyzerEngine
-from presidio_anonymizer import AnonymizerEngine
-from presidio_anonymizer.entities import OperatorConfig
 
 analyzer = AnalyzerEngine()   # cold start: load spaCy / recognisers once
-anonymizer = AnonymizerEngine()
-
-ENTITY_COUNTER: dict[str, int] = {}  # reset per invoke in real code
-
 
 @dataclass
 class EntityMap:
     token_to_value: dict[str, str] = field(default_factory=dict)
     value_to_token: dict[str, str] = field(default_factory=dict)
+    counters: dict[str, int] = field(default_factory=dict)
 
     def token_for(self, entity_type: str, value: str) -> str:
         key = f"{entity_type}:{value}"
+
         if key in self.value_to_token:
             return self.value_to_token[key]
-        n = ENTITY_COUNTER.get(entity_type, 0) + 1
-        ENTITY_COUNTER[entity_type] = n
+
+        n = self.counters.get(entity_type, 0) + 1
+        self.counters[entity_type] = n
+
         token = f"[{entity_type}_{n}]"
         self.value_to_token[key] = token
         self.token_to_value[token] = value
+
         return token
 
 
@@ -119,19 +116,19 @@ def chunk_text(text: str, max_chars: int = 3_000) -> list[str]:
 
 def redact_chunks(chunks: list[str], entity_map: EntityMap) -> list[str]:
     redacted = []
+
     for chunk in chunks:
         results = analyzer.analyze(text=chunk, language="en")
 
-        # Custom operator: stable typed tokens instead of <PERSON> / hash.
-        operators = {}
-        for r in results:
+        out = chunk
+        for r in sorted(results, key=lambda r: r.start, reverse=True):
             span = chunk[r.start:r.end]
             token = entity_map.token_for(r.entity_type, span)
-            # Wire Presidio OperatorConfig / custom operator to emit `token`
-            operators[r.entity_type] = OperatorConfig("replace", {"new_value": token})
 
-        out = anonymizer.anonymize(text=chunk, analyzer_results=results, operators=operators)
-        redacted.append(out.text)
+            out = out[:r.start] + token + out[r.end:]
+
+        redacted.append(out)
+
     return redacted
 
 
@@ -142,7 +139,6 @@ def rehydrate(text: str, entity_map: EntityMap) -> str:
 
 
 def handler(event, context):
-    ENTITY_COUNTER.clear()
     entity_map = EntityMap()
 
     system_prompt = event["system_prompt"]          # trusted instruction, no customer PII
@@ -185,7 +181,7 @@ Presidio works on spans inside a string. Large payloads should be split **before
 
 Cold start cost is mostly loading the NLP model — package a slim spaCy pipeline, reuse the global `AnalyzerEngine` across warm invokes, and keep chunk size predictable so timeouts stay boring.
 
-## Limits and honesty
+## Concerns or considerations
 
 - Local NER will miss novel or obfuscated PII; combine with format detectors and human review for high-stakes data.
 - Free text like “my mum in Margaret River” can leak identity indirectly even after names are stripped — threat-model the residual risk.

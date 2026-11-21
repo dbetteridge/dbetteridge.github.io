@@ -1,6 +1,6 @@
 # danb.id.au — Personal Homepage
 
-Modern, accessible static homepage for Daniel Betteridge — IT support and startup consulting.
+Modern, accessible static homepage for Daniel Betteridge — consulting for founders and scale-ups.
 
 Hosted on [GitHub Pages](https://pages.github.com/) at **https://danb.id.au**.
 

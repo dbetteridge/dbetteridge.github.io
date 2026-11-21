@@ -198,11 +198,6 @@ p:last-child {
   color: var(--color-text);
 }
 
-.nav-call {
-  color: var(--color-accent);
-  font-weight: 600;
-}
-
 @media (max-width: 767px) {
   .header-inner {
     padding-block: 0.5rem;
@@ -320,10 +315,6 @@ p:last-child {
   border-color: #cbd5e1;
   background: var(--color-bg-subtle);
   color: var(--color-text);
-}
-
-.phone-link.btn-primary:hover {
-  color: var(--color-on-accent);
 }
 
 /* Who I help */
@@ -764,44 +755,15 @@ p:last-child {
   color: var(--color-text-muted);
 }
 
-.contact-list a,
-.phone-number a,
-.phone-link {
+.contact-list a {
   font-size: 1.0625rem;
   font-weight: 500;
   text-decoration: none;
   word-break: break-word;
 }
 
-.contact-list a:hover,
-.phone-number a:hover,
-.phone-link:hover {
+.contact-list a:hover {
   text-decoration: underline;
-}
-
-.phone-reveal[hidden],
-.phone-number[hidden] {
-  display: none;
-}
-
-.phone-reveal--text {
-  display: inline-block;
-  padding: 0;
-  font: inherit;
-  font-size: 1.0625rem;
-  font-weight: 500;
-  color: var(--color-accent);
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: start;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.15em;
-}
-
-.phone-reveal--text:hover {
-  color: var(--color-accent-hover);
 }
 
 /* Footer */
