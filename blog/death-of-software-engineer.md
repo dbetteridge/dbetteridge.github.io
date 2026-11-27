@@ -4,6 +4,8 @@ date: 2026-11-27
 summary: Opinions, about opinions
 ---
 
+# The death of the software engineer has been greatly overstated
+
 Every other thought leadership post I've come across for the last few years has been swinging wildly from one extreme to the other. 
 
 Either engineering and white collar work is dead, replaced by "AI" and never to be done by humans again or "AI" is useless, hopeless and solved none of the authors problems. 
